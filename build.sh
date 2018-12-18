@@ -1,6 +1,10 @@
 #use ubuntu 18.04 which can be downloaded from https://www.ubuntu.com/download/server ......& login as root 
+#Try to use the The OS  with desktop already installed. Though the apt-get command to install the desktop is below in the script, but that would take lot of time..
+#...if the desktop is not already installed
 
 cd ~
+git clone https://github.com/abhishek-aurea/OhioLdapPlugin #need to give all permission to every one here
+mv OhioLdapPlugin/* ./
 rm -rf ~/Weather
 rm -rf ~/cmake
 
