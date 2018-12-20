@@ -3,8 +3,10 @@
 #...if the desktop is not already installed
 
 cd ~
+rm -rf ~/OhioLdapPlugin
 git clone https://github.com/abhishek-aurea/OhioLdapPlugin #need to give all permission to every one here
-mv OhioLdapPlugin/* ./
+cp -p OhioLdapPlugin/*.c ./
+cp -p OhioLdapPlugin/build-gtk.sh ./
 rm -rf ~/Weather
 rm -rf ~/cmake
 
@@ -14,7 +16,7 @@ wget https://github.com/ruslo/weather/archive/v1.2.0.tar.gz
 tar xf v1.2.0.tar.gz
 cd weather-1.2.0
 
-sudo apt-get install build-essential
+sudo apt-get install build-essential -y
 mkdir ~/cmake
 cd ~/cmake
 wget http://www.cmake.org/files/v3.2/cmake-3.2.2.tar.gz
@@ -22,8 +24,9 @@ tar -xvf cmake-3.2.2.tar.gz
 cd cmake-3.2.2
 ./configure
 make
+export PATH=~/cmake/cmake-3.2.2/bin:$PATH
 cd ~/Weather/weather-1.2.0
-sudo apt-get install python
+sudo apt-get install python -y
 
 cat README.md | sed 's,http://github.com/ruslo/sober,https://github.com/abhishek-aurea/OhioLdapPlugin,g' > R.md
 mv R.md README.md
@@ -35,14 +38,15 @@ cd -
 echo 'set(CMAKE_CXX_COMPILER "g++")' >> CMakeLists.txt
 echo 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")' >> CMakeLists.txt
 cd ..
-sudo apt-get install gcc
-sudo apt-get install g++
-sudo apt-get install cmake
+sudo apt-get install gcc -y
+sudo apt-get install g++ -y
+#sudo apt-get install cmake -y
+cd ~/Weather
 mkdir -p to/hunter/root/
 mkdir -p to/toolchains
-sudo apt-get install doxygen
+sudo apt-get install doxygen -y
 export DOXYGEN_EXECUTABLE=/usr/bin/doxygen
-sudo apt-get install graphviz
+sudo apt-get install graphviz -y
 export HUNTER_ROOT=${PWD}/to/hunter/root/
 export POLLY_ROOT=${PWD}/to/toolchains/
 #export HUNTER_ROOT=~/Weather/to/hunter/root/
@@ -52,8 +56,10 @@ echo 'set(CMAKE_CXX_COMPILER "gcc")' >> gcc.cmake
 echo 'set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")' >> gcc.cmake
 echo 'set(HUNTER_SKIP_TOOLCHAIN_VERIFICATION "YES")' >> gcc.cmake
 cd ~/Weather/weather-1.2.0
-cmake -H. -B_builds -DHUNTER_STATUS_DEBUG=ON -DCMAKE_TOOLCHAIN_FILE=$POLLY_ROOT/gcc.cmake
-cmake --build _builds
+#cmake -H. -B_builds -DHUNTER_STATUS_DEBUG=ON -DCMAKE_TOOLCHAIN_FILE=$POLLY_ROOT/gcc.cmake
+#cmake --build _builds
+~/cmake/cmake-3.2.2/bin/cmake -H. -B_builds -DHUNTER_STATUS_DEBUG=ON -DCMAKE_TOOLCHAIN_FILE=$POLLY_ROOT/gcc.cmake
+~/cmake/cmake-3.2.2/bin/cmake --build _builds
 
 cd ${HUNTER_ROOT}/Base/Source/Sober/Source/sober/network/api
 #cat OpenWeatherMap.cpp | sed 's,stream_.request.add_query("q", city);'/'stream_.request.add_query("q", city);stream_.request.add_query("APPID", "373725371cd6d4f4e8f59274dec28d20");'/g' > c
